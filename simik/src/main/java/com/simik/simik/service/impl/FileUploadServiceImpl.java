@@ -47,7 +47,11 @@ public class FileUploadServiceImpl implements FileUploadService {
             }
 
             EmployeeProfile profile = employeeProfileRepository.findByEmployee(employee)
-                    .orElseThrow(() -> new RuntimeException("Profili i punonjesit nuk u gjet."));
+                    .orElseGet(() -> {
+                        EmployeeProfile newProfile = new EmployeeProfile();
+                        newProfile.setEmployee(employee);
+                        return employeeProfileRepository.save(newProfile);
+                    })
 
             String originalFilename = file.getOriginalFilename();
 
