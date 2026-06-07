@@ -9,20 +9,24 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 @Service
 public class FileUploadServiceImpl implements FileUploadService {
 
-    @Value("${file.upload-dir}")
+    @Value("${file.upload-dir:uploads}")
     private String uploadDir;
 
     private final UserRepository userRepository;
     private final EmployeeProfileRepository employeeProfileRepository;
 
-    public FileUploadServiceImpl(UserRepository userRepository,
-                                 EmployeeProfileRepository employeeProfileRepository) {
+    public FileUploadServiceImpl(
+            UserRepository userRepository,
+            EmployeeProfileRepository employeeProfileRepository
+    ) {
         this.userRepository = userRepository;
         this.employeeProfileRepository = employeeProfileRepository;
     }
@@ -60,18 +64,15 @@ public class FileUploadServiceImpl implements FileUploadService {
             }
 
             String cleanedFilename = originalFilename.replaceAll("[^a-zA-Z0-9._-]", "_");
+            String safeEmail = employeeEmail.replace("@", "_").replace(".", "_");
+            String safeFilename = safeEmail + "_" + cleanedFilename;
 
-            String targetDirPath = uploadDir + File.separator + folderName;
-            File targetDir = new File(targetDirPath);
+            Path targetDir = Paths.get(uploadDir, folderName).toAbsolutePath().normalize();
+            Files.createDirectories(targetDir);
 
-            if (!targetDir.exists()) {
-                targetDir.mkdirs();
-            }
+            Path targetFile = targetDir.resolve(safeFilename).normalize();
 
-            String safeFilename = employeeEmail.replace("@", "_").replace(".", "_") + "_" + cleanedFilename;
-            String fullPath = targetDirPath + File.separator + safeFilename;
-
-            file.transferTo(new File(fullPath));
+            Files.copy(file.getInputStream(), targetFile, StandardCopyOption.REPLACE_EXISTING);
 
             String savedPath = folderName + "/" + safeFilename;
 
@@ -88,4 +89,5 @@ public class FileUploadServiceImpl implements FileUploadService {
         } catch (Exception e) {
             throw new RuntimeException("Gabim gjate ruajtjes se file-it: " + e.getMessage());
         }
-    }}
+    }
+}
