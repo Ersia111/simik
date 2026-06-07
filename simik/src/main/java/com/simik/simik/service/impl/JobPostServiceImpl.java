@@ -40,13 +40,19 @@ public class JobPostServiceImpl implements JobPostService {
         }
 
         EmployerSubscription subscription = employerSubscriptionRepository
-                .findByEmployerAndActiveTrueAndStatus(employer, "APPROVED")
-                .orElseThrow(() -> new RuntimeException("Duhet të keni një paketë të aprovuar nga admini për të postuar njoftime."));
+                .findTopByEmployerAndActiveTrueAndStatusOrderByEndDateDesc(
+                        employer,
+                        "APPROVED"
+                )
+                .orElseThrow(() -> new RuntimeException(
+                        "Duhet të keni një paketë të aprovuar nga admini për të postuar njoftime."
+                ));
 
         if (subscription.getEndDate().isBefore(LocalDate.now())) {
             subscription.setActive(false);
             subscription.setStatus("EXPIRED");
             employerSubscriptionRepository.save(subscription);
+
             throw new RuntimeException("Paketa ka skaduar.");
         }
 

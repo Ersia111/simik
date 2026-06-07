@@ -10,10 +10,7 @@ import java.util.Optional;
 public interface EmployerSubscriptionRepository
         extends JpaRepository<EmployerSubscription, Long> {
 
-    Optional<EmployerSubscription> findByEmployerAndActiveTrue(User employer);
-
-    Optional<EmployerSubscription>
-    findByEmployerAndActiveTrueAndStatus(
+    Optional<EmployerSubscription> findTopByEmployerAndActiveTrueAndStatusOrderByEndDateDesc(
             User employer,
             String status
     );
@@ -21,4 +18,9 @@ public interface EmployerSubscriptionRepository
     List<EmployerSubscription> findByStatus(String status);
 
     List<EmployerSubscription> findByEmployer(User employer);
+
+    List<EmployerSubscription> findByEmployerAndActiveTrueAndStatus(
+            User employer,
+            String status
+    );
 }

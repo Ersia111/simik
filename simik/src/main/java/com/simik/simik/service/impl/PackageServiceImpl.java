@@ -84,12 +84,24 @@ public class PackageServiceImpl implements PackageService {
                                 new RuntimeException("Kerkesa nuk u gjet.")
                         );
 
+        User employer = subscription.getEmployer();
+
+        List<EmployerSubscription> activeSubscriptions =
+                employerSubscriptionRepository.findByEmployerAndActiveTrueAndStatus(
+                        employer,
+                        "APPROVED"
+                );
+
+        for (EmployerSubscription activeSub : activeSubscriptions) {
+            activeSub.setActive(false);
+            employerSubscriptionRepository.save(activeSub);
+        }
+
         subscription.setStatus("APPROVED");
         subscription.setActive(true);
 
         employerSubscriptionRepository.save(subscription);
     }
-
     @Override
     public void rejectSubscription(Long subscriptionId) {
 
