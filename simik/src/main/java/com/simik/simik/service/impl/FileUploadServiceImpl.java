@@ -51,7 +51,7 @@ public class FileUploadServiceImpl implements FileUploadService {
                         EmployeeProfile newProfile = new EmployeeProfile();
                         newProfile.setEmployee(employee);
                         return employeeProfileRepository.save(newProfile);
-                    })
+                    });
 
             String originalFilename = file.getOriginalFilename();
 
