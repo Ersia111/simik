@@ -7,7 +7,7 @@ import com.simik.simik.repository.UserRepository;
 import com.simik.simik.service.EmployeeProfileService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 
 @Service
@@ -65,8 +65,9 @@ public class EmployeeProfileServiceImpl implements EmployeeProfileService {
 
         employeeProfileRepository.save(profile);
     }
-
+    @Transactional(readOnly = true)
     @Override
+
     public EmployeeProfile getProfileByEmployeeEmail(String email) {
         User employee = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("Punonjesi nuk u gjet."));

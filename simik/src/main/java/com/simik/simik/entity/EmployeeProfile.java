@@ -30,16 +30,14 @@ public class EmployeeProfile {
     private String cvContentType;
 
     @JsonIgnore
-    @Lob
-    @Column(name = "cv_file")
+    @Column(name = "cv_file", columnDefinition = "bytea")
     private byte[] cvFile;
 
     private String portfolioFileName;
     private String portfolioContentType;
 
     @JsonIgnore
-    @Lob
-    @Column(name = "portfolio_file")
+    @Column(name = "portfolio_file", columnDefinition = "bytea")
     private byte[] portfolioFile;
 
     @OneToOne
