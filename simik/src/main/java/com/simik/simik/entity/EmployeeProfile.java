@@ -1,6 +1,5 @@
 package com.simik.simik.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -25,20 +24,6 @@ public class EmployeeProfile {
 
     private String cvPath;
     private String portfolioPath;
-
-    private String cvFileName;
-    private String cvContentType;
-
-    @JsonIgnore
-    @Column(name = "cv_file", columnDefinition = "bytea")
-    private byte[] cvFile;
-
-    private String portfolioFileName;
-    private String portfolioContentType;
-
-    @JsonIgnore
-    @Column(name = "portfolio_file", columnDefinition = "bytea")
-    private byte[] portfolioFile;
 
     @OneToOne
     @JoinColumn(name = "employee_id", unique = true)
@@ -136,54 +121,6 @@ public class EmployeeProfile {
 
     public void setPortfolioPath(String portfolioPath) {
         this.portfolioPath = portfolioPath;
-    }
-
-    public String getCvFileName() {
-        return cvFileName;
-    }
-
-    public void setCvFileName(String cvFileName) {
-        this.cvFileName = cvFileName;
-    }
-
-    public String getCvContentType() {
-        return cvContentType;
-    }
-
-    public void setCvContentType(String cvContentType) {
-        this.cvContentType = cvContentType;
-    }
-
-    public byte[] getCvFile() {
-        return cvFile;
-    }
-
-    public void setCvFile(byte[] cvFile) {
-        this.cvFile = cvFile;
-    }
-
-    public String getPortfolioFileName() {
-        return portfolioFileName;
-    }
-
-    public void setPortfolioFileName(String portfolioFileName) {
-        this.portfolioFileName = portfolioFileName;
-    }
-
-    public String getPortfolioContentType() {
-        return portfolioContentType;
-    }
-
-    public void setPortfolioContentType(String portfolioContentType) {
-        this.portfolioContentType = portfolioContentType;
-    }
-
-    public byte[] getPortfolioFile() {
-        return portfolioFile;
-    }
-
-    public void setPortfolioFile(byte[] portfolioFile) {
-        this.portfolioFile = portfolioFile;
     }
 
     public User getEmployee() {
